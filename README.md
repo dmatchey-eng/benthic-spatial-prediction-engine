@@ -2,8 +2,8 @@
 
 An advanced, lightweight C++20 combinatorial optimization framework designed to reverse-engineer hidden seafloor bathymetry using multi-constellation satellite radar altimetry.
 
-[![CodeQL Analysis](https://github.com)](https://github.com)
-[![Language](https://shields.io)](https://cppreference.com)
+![CodeQL Status](https://github.com)
+![Modern C++ Standard](https://shields.io)
 
 ---
 
