@@ -1,3 +1,5 @@
+#This phase builds a local spatial database from public SRTM15+ or GEBCO NetCDF/GeoTIFF grids. It processes raw Sea Surface Height (SSH) anomalies, computes spatial gradients, and flags data points lacking direct multibeam sonar validation.
+
 import numpy as np
 import pandas as pd
 import xarray as xr
