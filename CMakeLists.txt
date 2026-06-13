@@ -4,12 +4,18 @@ project(BenthicWyvernEngine VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Configure include search paths
 include_directories(include)
 
-# Define executable and source files linkage
+# 1. Main Executable Application Target
 add_executable(BenthicWyvernEngine
     src/main.cpp
+    src/CyclicalCipher.cpp
+    src/BenthicMesh.cpp
+)
+
+# 2. Test Suite Suite Target
+add_executable(BenthicTests
+    tests/test.cpp
     src/CyclicalCipher.cpp
     src/BenthicMesh.cpp
 )
