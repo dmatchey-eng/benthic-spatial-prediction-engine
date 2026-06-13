@@ -1,0 +1,20 @@
+# =========================================================
+# BENTHIC ANALYSIS METADATA HEADER
+# {
+#   "export_timestamp_utc": "2026-06-13T21:16:42.104921",
+#   "data_provenance": {
+#     "input_satellites": ["NOAA-Jason3", "ESA-Sentinel6-MF"],
+#     "initial_grid_dimensions": "50x50 cells"
+#   },
+#   "topographical_inferred_metrics": {
+#     "max_calculated_depth_meters": -4500.0,
+#     "min_calculated_depth_meters": -1200.0
+#   }
+# }
+# =========================================================
+
+v 0.00 0.00 -4500.00
+v 500.00 0.00 -4498.21
+...
+f 1 2 52 51
+f 2 3 53 52
