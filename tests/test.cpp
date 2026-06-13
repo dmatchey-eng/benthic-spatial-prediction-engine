@@ -78,3 +78,38 @@ int main() {
     std::cout << "🎉 ALL TESTS PASSED SUCCESSFULLY!" << std::endl;
     return 0;
 }
+// Append this function inside your tests/test.cpp file
+
+bool test_cryptographic_bytecode_security_quad() {
+    // 1. Establish initial 3x3 array template representing a mini-seamount crest
+    std::vector<std::vector<double>> originalGrid = {
+        {-4100.0, -4100.0, -4100.0},
+        {-4100.0, -1200.0, -4100.0},
+        {-4100.0, -4100.0, -4100.0}
+    };
+    
+    std::string secretToken = "WyvernCoordinationKey_2026";
+    BenthicMesh meshService(500.0);
+    
+    // 2. Compile array structure into raw binary bytecode bytes
+    std::vector<uint8_t> activeBytecodeStream = meshService.compileToBytecode(originalGrid, secretToken);
+    
+    // 3. Run basic recovery test pass
+    std::vector<std::vector<double>> unpackedGrid;
+    bool normalDecompileStatus = meshService.decompileFromBytecode(activeBytecodeStream, secretToken, unpackedGrid);
+    
+    if (!normalDecompileStatus || unpackedGrid[1][1] != -1200.0) return false;
+    
+    // 4. Tamper Test: Simulate a data corruption anomaly during transfer
+    std::vector<uint8_t> corruptedBytecodeStream = activeBytecodeStream;
+    corruptedBytecodeStream[12] ^= 0xFF; // Flip bits inside data payload bounds
+    
+    std::vector<std::vector<double>> failedGridContainer;
+    bool maliciousDecompileStatus = meshService.decompileFromBytecode(corruptedBytecodeStream, secretToken, failedGridContainer);
+    
+    // The decompiler should immediately identify data tampering and refuse to parse the bad stream
+    return (maliciousDecompileStatus == false);
+}
+
+// Remember to update your main() loop inside tests/test.cpp to run this new block:
+// RUN_TEST(test_cryptographic_bytecode_security_quad);
