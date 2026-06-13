@@ -26,11 +26,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    # Initialize CodeQL with fully qualified, built-in suite definitions
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        queries: security-extended,quality
+        queries: +security-extended,security-and-quality
 
     # CodeQL requires a valid build step for C++ compilation
     - name: Configure CMake and Build
