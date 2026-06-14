@@ -2,9 +2,9 @@
 
 An advanced, lightweight C++20 combinatorial optimization framework designed to reverse-engineer hidden seafloor bathymetry using multi-constellation satellite radar altimetry.
 
-* **🛡️**[![CodeQL Actions Status](🛡️)](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/actions/workflows/codeql.yml)
-* **💻**[![Modern C++ Standard](💻)](https://cppreference.com)
-* **🏷️**[![Release Version](🏷️)](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/releases)
+* **🛡️**[![CodeQL Actions Status]](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/actions/workflows/codeql.yml)
+* **💻**[![Modern C++ Standard]](https://cppreference.com)
+* **🏷️**[![Release Version]](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/releases)
 
 ---
 
