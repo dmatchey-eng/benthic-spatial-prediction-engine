@@ -5,7 +5,6 @@
 #include "CyclicalCipher.hpp"
 #include "SurveyDigester.hpp"
 #include "BenthicMesh.hpp"
-#include "ScientificEvaluator.hpp"
 #include "QualificationHarness.hpp"
 
 // ANSI Console Colors
