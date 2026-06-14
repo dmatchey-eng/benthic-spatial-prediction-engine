@@ -13,6 +13,7 @@ add_executable(BenthicWyvernEngine
     src/BenthicMesh.cpp
     src/SparseLoader.cpp
     src/SurveyDigester.cpp
+    src/QualificationHarness.cpp
 )
 
 # 2. Test Suite Suite Target
@@ -22,4 +23,5 @@ add_executable(BenthicTests
     src/BenthicMesh.cpp
     src/SparseLoader.cpp
     src/SurveyDigester.cpp
+    src/QualificationHarness.cpp
 )
