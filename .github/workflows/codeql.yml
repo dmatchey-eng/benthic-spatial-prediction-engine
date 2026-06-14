@@ -72,7 +72,6 @@ jobs:
         echo "    <div style='font-size: 12px; text-transform: uppercase; color: #8b8baf; font-weight: bold; letter-spacing: 1px;'>Sonar Sounding (True)</div>" >> $GITHUB_STEP_SUMMARY
         echo "    <div style='font-size: 28px; font-weight: bold; margin-top: 10px; color: #38b6ff;'>${SONAR_DEPTH} m</div>" >> $GITHUB_STEP_SUMMARY
         echo "    <div style='font-size: 11px; margin-top: 8px; color: #a0a0c0;'>🚢 SurveyDigester Palette Ingested</div>" >> $GITHUB_STEP_SUMMARY
-        echo "  </div>" >> $shifted_summary
         echo "  </div>" >> $GITHUB_STEP_SUMMARY
         
         echo "  <div style='flex: 1; min-width: 220px; background: linear-gradient(135deg, #1e1e2f 0%, #2b2b40 100%); border-left: 5px solid #00ff66; border-radius: 6px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); color: #ffffff;'>" >> $GITHUB_STEP_SUMMARY
