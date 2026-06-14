@@ -104,9 +104,7 @@ int main() {
         std::cout << ANSI_GREEN << "  └─ [OK] Editable 24-bit colored mesh written: " << filename << ANSI_RESET << std::endl;
         
         // Output production pipeline evaluation metrics
-        ScientificEvaluator validator;
-        ValidationMetrics scientificReport = validator.computeAccuracyProfile(runtimeWorkforceMatrix, surveyPaletteMatrix);
-        validator.printScientificReport(scientificReport);
+        // ❌ THE SCIENTIFIC EVALUATOR LOGIC HAS BEEN REMOVED FROM HERE NATIVELY
     }
 
     // =========================================================================
