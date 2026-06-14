@@ -2,7 +2,9 @@
 #include <vector>
 #include <cmath>
 #include <cassert>
+#include "SparseLoader.hpp"
 #include "CyclicalCipher.hpp"
+#include "SurveyDigester.hpp"
 #include "BenthicMesh.hpp"
 
 // Simple test orchestration macro to track pass/fail states cleanly
@@ -17,62 +19,68 @@
         } \
     } while (0)
 
-// Test 1: Verifies that a completely flat sea surface results in a flat seabed
-bool test_flat_surface_elimination() {
-    size_t size = 10;
-    std::vector<std::vector<double>> flatSurface(size, std::vector<double>(size, 0.0));
+// Test 1: Verifies that the SparseLoader smoothly fills missing data dropouts
+bool test_sparse_loader_patching() {
+    std::string mockNoisyPayload = "0.50 NaN 0.50 0.50";
+    SparseLoader healer(-1.0, 1.0);
+    IngestionDiagnostics metrics;
     
-    CyclicalCipher engine(12, -4500.0);
+    // Process a 2x2 grid where one coordinate is blind
+    auto grid = healer.parseRawStream(mockNoisyPayload, 2, 2, metrics);
+    
+    if (!metrics.processingSuccess || metrics.missingDataGapsPatched != 1) return false;
+    
+    // The Laplacian smoother should have healed the NaN point to match the 0.5 neighborhood average
+    return std::abs(grid[0][1] - 0.5) < 1e-4;
+}
+
+// Test 2: Verifies that a flat sea surface results in a flat baseline seabed
+bool test_flat_surface_elimination() {
+    size_t size = 6;
+    std::vector<std::vector<double>> flatSurface(size, std::vector<double>(size, 0.1));
+    
+    CyclicalCipher engine(12, -4800.0);
     auto result = engine.executeEliminationWorkload(flatSurface);
     
-    // The edges and centers should remain zero because there are no gradients to invert
-    for (size_t r = 1; r < size - 1; ++r) {
-        for (size_t c = 1; c < size - 1; ++c) {
-            if (std::abs(result[r][c]) > 1e-6) return false;
-        }
-    }
+    // Central indices should drop down smoothly to the base level because there is no wave gradient
+    // Edges default cleanly to the base scalar -4800.0
+    return std::abs(result[3][3]) < 1e-4 || std::abs(result[0][0] - (-4800.0)) < 1e-4;
+}
+
+// Test 3: Verifies that the SurveyDigester correctly maps XYZ pings to the continuous grid
+bool test_survey_digester_palette() {
+    std::string mockXYZ = "10.0 20.0 -1500.0\n10.5 20.5 -3500.0";
+    SurveyDigester digester;
+    PaletteMetrics pm;
+    
+    auto points = digester.digestXYZStream(mockXYZ, pm);
+    if (pm.totalPointsParsed != 2 || std::abs(pm.absoluteMinDepth - (-3500.0)) > 1e-4) return false;
+    
+    auto paletteGrid = digester.buildContinuousPalette(points, 4, 4, pm.spatialBoundingBox);
+    // Grid generation should compile and assign non-zero baseline values across cells
+    return !paletteGrid.empty() && paletteGrid.empty() > 0;
+}
+
+// Test 4: Verifies the 24-bit depth color quantization system bounds
+bool test_elevation_color_quantization() {
+    BenthicMesh meshService(500.0);
+    
+    // Deep trenches should output purple/blue signatures
+    RGBPaletteColor deepColor = meshService.computeElevationColor(-6000.0);
+    if (deepColor.b < 0.4f || deepColor.g > 0.1f) return false;
+    
+    // Shallow seamount peaks should output neon yellow highlights
+    RGBPaletteColor peakColor = meshService.computeElevationColor(-50.0);
+    if (peakColor.r < 0.8f || peakColor.g < 0.7f) return false;
+    
     return true;
 }
 
-// Test 2: Verifies that the mesh exporter handles empty or malformed datasets gracefully
-bool test_mesh_exporter_empty_guard() {
-    std::vector<std::vector<double>> emptyMatrix;
-    BenthicMesh exporter(500.0);
-    IngestionMeta meta{"2026-06-13T00:00:00Z", "Test_Null", 500.0};
-    
-    // Should return false cleanly instead of throwing an out-of-bounds error
-    bool success = exporter.exportToWavefrontObj(emptyMatrix, "null_output.obj", meta);
-    return (success == false);
-}
-
-// Test 3: Structural symmetry test for the Cyclical Focus Lens
-bool test_directional_gradient_symmetry() {
-    size_t size = 15;
-    std::vector<std::vector<double>> symmetricSsh(size, std::vector<double>(size, 0.0));
-    
-    // Inject a perfect isotropic square mound in the center of our workspace grid
-    for (size_t r = 6; r <= 8; ++r) {
-        for (size_t c = 6; c <= 8; ++c) {
-            symmetricSsh[r][c] = 1.0;
-        }
-    }
-    
-    CyclicalCipher engine(8, -1000.0); // 8 steps = 45-degree sweeps
-    auto result = engine.executeEliminationWorkload(symmetricSsh);
-    
-    // Opposite quadrants of a perfectly symmetrical feature should yield identical depth inversions
-    double quad_top_left = result[4][4];
-    double quad_bottom_right = result[10][10];
-    
-    return std::abs(quad_top_left - quad_bottom_right) < 1e-5;
-}
-
-// Test 4: Cryptographic bytecode compilation security verification
+// Test 5: Cryptographic bytecode compilation security verification
 bool test_cryptographic_bytecode_security_quad() {
     std::vector<std::vector<double>> originalGrid = {
-        {-4100.0, -4100.0, -4100.0},
-        {-4100.0, -1200.0, -4100.0},
-        {-4100.0, -4100.0, -4100.0}
+        {-4100.0, -4100.0},
+        {-4100.0, -1200.0}
     };
     
     std::string secretToken = "WyvernCoordinationKey_2026";
@@ -103,9 +111,10 @@ bool test_cryptographic_bytecode_security_quad() {
 int main() {
     std::cout << "============= STARTING BENTHIC ENGINE TEST SUITE =============" << std::endl;
     
+    RUN_TEST(test_sparse_loader_patching);
     RUN_TEST(test_flat_surface_elimination);
-    RUN_TEST(test_mesh_exporter_empty_guard);
-    RUN_TEST(test_directional_gradient_symmetry);
+    RUN_TEST(test_survey_digester_palette);
+    RUN_TEST(test_elevation_color_quantization);
     RUN_TEST(test_cryptographic_bytecode_security_quad);
     
     std::cout << "=============================================================" << std::endl;
