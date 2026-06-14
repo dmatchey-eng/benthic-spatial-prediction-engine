@@ -1,38 +1,48 @@
-# Benthic Wyvern Engine v1.0.0
+# Benthic Wyvern Engine v1.2.0
 
 An advanced, lightweight C++20 combinatorial optimization framework designed to reverse-engineer hidden seafloor bathymetry using multi-constellation satellite radar altimetry.
+
+![CodeQL Status](https://github.com)
+![Modern C++ Standard](https://shields.io)
+![Release Version](https://shields.io)
 
 ---
 
 ## 🎯 Program Scope & Goal
 
-The **Benthic Wyvern Engine** targets the massive problem of global marine "data poverty". While space agencies have mapped the surface of Mars down to centimeters, over **71% of Earth's deep ocean floor** remains fuzzy, unverified, and dangerously unmapped. 
+The **Benthic Wyvern Engine** targets global marine "data poverty." While Mars has been mapped down to centimeters, over **71% of Earth's ocean floor** remains fuzzy and unverified. 
 
-Direct shipborne multibeam sonar mapping is expensive, slow, and heavily biased toward commercial Northern Hemisphere shipping corridors. This program provides an automated alternative: it converts open-source, multi-national sea surface height (SSH) anomalies into predictive, high-resolution 3D bathymetric meshes using **algorithmic elimination**.
+Direct shipborne multibeam sonar mapping is expensive, slow, and heavily biased toward commercial shipping corridors. This program provides an automated alternative: it converts open-source, multi-national sea surface height (SSH) anomalies into predictive, high-resolution 3D bathymetric meshes using **algorithmic elimination**.
 
 ### Core Objectives:
-* **Ingest & Harmonize:** Consolidate data streams from US (NOAA/NASA) and European (ESA/Copernicus) satellite systems into a unified reference geoid (EGM2008).
-* **Isolate & Filter:** Apply Lagrange and Euler parametric matrices across a **Cyclical Rotating Cipher** to isolate static gravitational features from active ocean currents and human marine infrastructure noise.
-* **Optimize Topography:** Employ a combinatorial sequence path search (inspired by minimalist superpermuations) to rapidly resolve highly probable 3D geometries of underwater seamounts.
-* **Export Open Geometry:** Generate lightweight, vertex-editable Wavefront OBJ files containing embedded structural provenance metadata for instant utilization by local environmental groups or research vessels.
+* **Ingest & Cleanse:** Parse sparse, noisy multi-constellation satellite data via a spatial `SparseLoader`, repairing data dropouts natively using Laplacian diffusion algorithms.
+* **Isolate & Filter:** Apply Lagrange and Euler parameters across an upgraded **Cyclical Rotating Cipher** utilizing non-linear Fibonacci fractional spacing and a 3x3 rotating convolution kernel.
+* **Integrate Ground Truth:** Ingest sparse, irregular physical sonar tracks through the `SurveyDigester` palette, normalizing real soundings via Inverse Distance Weighting (IDW).
+* **Secure Storage Arrays:** Compress and package volatile topography matrices into cryptographically signed bytecode streams (`std::vector<uint8_t>`) verified with a 256-bit validation signature.
+* **Export Open Geometry:** Generate vertex-editable Wavefront OBJ meshes utilizing an exhaustive **24-bit elevation color-coding system** for native 3D visualization.
 
 ---
 
-## 📜 Historical Insight: The Gravitational Lens
+## 📜 Historical Insight & Core Axiom
 
-The core theory of this software relies on a historical discovery made during the late 20th century space missions (such as Seasat in 1978 and Geosat in 1985). Early oceanographers realized that the ocean surface is not flat. Large geological structures resting on tectonic plates possess massive density profiles. 
+The core theory of this software relies on a historical discovery made during late 20th-century space geodesy missions (Seasat, Geosat). Large geological structures resting on tectonic plates possess massive density profiles. An underwater seamount pulling on the surrounding ocean via local gravity creates a localized water accumulation—a permanent **sea surface bulge**. By tracking these micro-variations using satellite radar pulses, we use the surface itself as a natural lens.
 
-An underwater mountain (seamount) pulling on the surrounding ocean via local gravity creates a localized water accumulation—a permanent **sea surface bulge**. A seamount rising 3,000 meters from the abyssal plain can pull the surface of the ocean upward by up to several meters over a wide area. By tracking these micro-variations using satellite radar pulses, we can look through the water column using the surface itself as a natural lens.
+However, uniform sampling patterns over discrete pixel grids generate severe harmonic artifacts. 
+
+> ### 🏛️ Core Design Axiom
+> **"Never let the lens step to the beat of the pixels."**
+> 
+> *If your directional step count shares factors with your grid dimensions (e.g., executing 12 steps on a 12x12 matrix), the calculation triggers **harmonic aliasing**. The algorithm stops searching for geological truth and instead synthesizes a "ghost" by sampling its own coordinate frequencies. To break this symmetry in the wild, the engine implements an asymmetric prime distribution (**23 steps**) to force data cancellation of repeating noise waves.*
 
 ---
 
 ## 📊 Mapping Deficits & Priorities
 
-The engine uses a dynamic priority allocation matrix to direct processing power toward regions with the most severe structural data gaps:
+The engine targets processing power toward regions with the most severe structural data gaps:
 
-| Ocean Basin | Est. Surface Area (M km²) | Mapped via Sonar (%) | Satellite Dependency Profile | Computational Routing |
+| Ocean Basin | Surface Area (M km²) | Sonar Coverage (%) | Satellite Dependency Profile | Computational Routing |
 | :--- | :---: | :---: | :--- | :--- |
-| **Southern Ocean** | 20.3 | ~16% | Extreme (High ice/storm interference) | Tier 3 Heavy Filtration |
+| **Southern Ocean** | 20.3 | ~16% | Extreme (High ice/storm interference) | Tier 3 Heavy Filtering |
 | **South Pacific** | 87.7 | ~19% | Critical (Massive unmapped voids) | Tier 2 Standard Inversion |
 | **Indian Ocean** | 70.5 | ~22% | High (Under-sampled deep trenches) | Tier 2 Standard Inversion |
 | **South Atlantic** | 40.3 | ~26% | Moderate (Fragmented tectonic tracks) | Tier 1 Pristine Core |
@@ -43,40 +53,39 @@ The engine uses a dynamic priority allocation matrix to direct processing power 
 
 ## 🛠️ Repository Architecture
 
-This engine is developed completely in standardized, modern C++20 with an emphasis on zero raw pointer leaks, strict memory boundaries, and full compliance with automated GitHub CodeQL scanning.
-
 ```text
 ├── .github/workflows/
-│   └── codeql.yml       # Automated deep-security & code-quality scanning loop
+│   └── codeql.yml       # Optimized high-speed security & quality scanning loop
 ├── CMakeLists.txt           # Build automation configuration mapping modern CXX targets
 ├── include/
-│   ├── BenthicMesh.hpp      # Header for 24-bit vertex color compilation and OBJ packaging
+│   ├── BenthicMesh.hpp      # Header for 24-bit vertex color matrix and OBJ packaging
 │   ├── CyclicalCipher.hpp   # Header for adaptive 360° gradient filters & volatility metrics
 │   ├── SparseLoader.hpp     # Header for telemetry tracking, outlier screening, and IOR healing
+│   └── QualificationHarness.hpp # Header for advanced blind occlusion testing
 │   └── SurveyDigester.hpp   # Header for hydrographic XYZ data ingestion and IDW palettes
 ├── src/
 │   ├── BenthicMesh.cpp      # Mechanics for quad-decimated editable meshes and bytecode serialization
 │   ├── CyclicalCipher.cpp   # Mechanics for adaptive structural phase inversion and scaling
-│   ├── BenthicMesh.cpp      # Mechanics for building quad-decimated editable 3D meshes
 │   ├── SparseLoader.cpp     # Mechanics for Laplacian diffusion data healing across blank tracks
+│   ├── QualificationHarness.cpp # Mechanics for spatial occlusion and blind qualification sweeps
 │   ├── SurveyDigester.cpp   # Mechanics for continuous spatial palette distance weighting
 │   └── main.cpp             # Processing pipeline demonstration harness and error fallback intercept
 └── tests/
     └── test.cpp             # Unit testing loops validating matrix invariants & tampering guards
 ```
 
-### 📡 Telemetry Ingestion Specifications
+---
 
-To feed custom data matrix layers into the processing workspace, input string components must adhere to the following data layouts:
+## 📡 Telemetry Ingestion Specifications
 
-#### 1. Satellite Radar Altimetry Stream (`SparseLoader`)
+### 1. Satellite Radar Altimetry Stream (`SparseLoader`)
 Raw satellite payloads should be provided as space-delimited text blocks representing continuous spatial coordinates. Data dropouts or unmapped tracking lines can be marked explicitly with `NaN` or `-9999.0` placeholders:
 ```text
 0.12  0.15   NaN   0.18  0.11
 0.14  0.45  0.45   0.42 -9999
 ```
 
-#### 2. Hydrographic Sonar Track Records (`SurveyDigester`)
+### 2. Hydrographic Sonar Track Records (`SurveyDigester`)
 Absolute ground-truth soundings should be supplied as newline-separated XYZ coordinate triplets. Lines starting with `#` are ignored as comments:
 ```text
 # Longitude  Latitude  True_Depth_Meters
@@ -85,13 +94,9 @@ Absolute ground-truth soundings should be supplied as newline-separated XYZ coor
 -25.46       -45.04    -1500.0
 ```
 
-```
-
 ---
 
-## 🚀 Building & Running via Browser/Terminal
-
-Since this repository is fully standardized with CMake, it compiles on any platform natively:
+## 🚀 Building & Running
 
 ### Build the Engine:
 ```bash
@@ -99,12 +104,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-### Run Pipeline Simulation:
+### Run Multi-Sensor Pipeline & Qualification Tests:
 ```bash
 ./build/BenthicWyvernEngine
-```
-
-### Run Tests:
-```bash
-./build/BenthicTests # If test executable target is appended
 ```
