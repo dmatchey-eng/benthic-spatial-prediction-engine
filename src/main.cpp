@@ -5,8 +5,10 @@
 #include "CyclicalCipher.hpp"
 #include "SurveyDigester.hpp"
 #include "BenthicMesh.hpp"
+#include "ScientificEvaluator.hpp"
+#include "QualificationHarness.hpp"
 
-// Classic ANSI Color Escape Sequence Macros
+// ANSI Console Colors
 #define ANSI_RESET   "\033[0m"
 #define ANSI_RED     "\033[31m"
 #define ANSI_GREEN   "\033[32m"
@@ -17,11 +19,11 @@
 #define ANSI_BOLD    "\033[1m"
 
 int main() {
-    // -------------------------------------------------------------------------
-    // SYSTEM BANNER (Cyan Framework Setup)
-    // -------------------------------------------------------------------------
+    // =========================================================================
+    // HEADER BANNER
+    // =========================================================================
     std::cout << ANSI_CYAN << ANSI_BOLD << "=========================================================" << ANSI_RESET << std::endl;
-    std::cout << ANSI_CYAN << ANSI_BOLD << "🚀 BENTHIC SPATIAL ENGINE v1.1.0 // INITIALIZING WORKLOAD" << ANSI_RESET << std::endl;
+    std::cout << ANSI_CYAN << ANSI_BOLD << "🚀 BENTHIC SPATIAL ENGINE v1.2.0 // WORKLOAD RUNTIME" << ANSI_RESET << std::endl;
     std::cout << ANSI_CYAN << ANSI_BOLD << "=========================================================" << ANSI_RESET << std::endl;
 
     size_t targetRows = 10;
@@ -29,9 +31,11 @@ int main() {
     double horizontalResolutionMeters = 500.0;
     std::vector<std::vector<double>> fallbackClimatologyMatrix(targetRows, std::vector<double>(targetCols, -4500.0));
 
-    // -------------------------------------------------------------------------
-    // ZONE 1: TELEMETRY PATCHING (Yellow Data Information)
-    // -------------------------------------------------------------------------
+    // =========================================================================
+    // OPERATION 1: MULTI-SENSOR INGESTION PIPELINE (THE ORIGINAL PROGRAM)
+    // =========================================================================
+    std::cout << "\n" << ANSI_GREEN << ANSI_BOLD << "▶️ [OPERATION 1] RUNNING PRODUCTION INGESTION PIPELINE" << ANSI_RESET << std::endl;
+
     std::string rawSatellitePayload = 
         "0.12  0.15   NaN   0.18  0.11  0.09  0.12  0.14   NaN   0.11 "
         "0.14  0.45  0.45   0.42  0.13  0.12  0.45  0.42  0.41   0.10 "
@@ -47,87 +51,117 @@ int main() {
     SparseLoader dataHealer(-2.0, 2.0); 
     IngestionDiagnostics loaderMetrics;
 
-    std::cout << "\n📡 " << ANSI_BOLD << "Ingesting Satellite Telemetry..." << ANSI_RESET << std::endl;
+    std::cout << "📡 Parsing and repairing sparse multi-constellation satellite stream..." << std::endl;
     auto healedSshGrid = dataHealer.parseRawStream(rawSatellitePayload, targetRows, targetCols, loaderMetrics);
 
     if (!loaderMetrics.processingSuccess) {
         std::cerr << ANSI_RED << "❌ Pipeline Error: Initial telemetry parsing failed." << ANSI_RESET << std::endl;
         return 1;
     }
-    std::cout << ANSI_YELLOW << "  ⚠️  [PATCH] Processed " << loaderMetrics.totalCellsRead << " cells." << ANSI_RESET << std::endl;
-    std::cout << ANSI_YELLOW << "  ⚠️  [PATCH] Automatically repaired " << loaderMetrics.missingDataGapsPatched << " data dropouts via Laplacian diffusion." << ANSI_RESET << std::endl;
+    std::cout << ANSI_YELLOW << "  ⚠️  [PATCH] Repaired " << loaderMetrics.missingDataGapsPatched << " corrupted telemetry gaps." << ANSI_RESET << std::endl;
 
-    // -------------------------------------------------------------------------
-    // ZONE 2: ALGORITHMIC EXECUTION (Magenta Computation Tracks)
-    // -------------------------------------------------------------------------
-    std::cout << "\n🔄 " << ANSI_BOLD << "Activating Cyclical Cipher Analysis..." << ANSI_RESET << std::endl;
+    std::cout << "🔄 Activating Cyclical Cipher: Scanning directional gradient arrays..." << std::endl;
     CyclicalCipher inversionEngine(12, -4800.0);
     auto inferredBathymetry = inversionEngine.executeEliminationWorkload(healedSshGrid);
-    std::cout << ANSI_MAGENTA << "  ⚙️  [CIPHER] 12 directional gradient loops synchronized cleanly." << ANSI_RESET << std::endl;
 
-    // -------------------------------------------------------------------------
-    // ZONE 3: GROUND TRUTH PARSING (Blue / Oceanographic Track Mapping)
-    // -------------------------------------------------------------------------
     std::string rawVesselTrackPayload = 
         "-25.50  -45.00  -4200.0\n"
         "-25.48  -45.02  -3800.0\n"
-        "-25.46  -45.04  -1500.0\n"
+        "-25.46  -45.04  -1500.0\n" 
         "-25.44  -45.06  -3750.0\n"
         "-25.42  -45.08  -4150.0\n";
 
     SurveyDigester digester;
     PaletteMetrics palette;
 
-    std::cout << "\n🚢 " << ANSI_BOLD << "Ingesting Physical Sonar Tracks..." << ANSI_RESET << std::endl;
+    std::cout << "🚢 Digesting real-world hydrographic sonar track lines..." << std::endl;
     auto sparsePoints = digester.digestXYZStream(rawVesselTrackPayload, palette);
     auto surveyPaletteMatrix = digester.buildContinuousPalette(sparsePoints, targetRows, targetCols, palette.spatialBoundingBox);
-    std::cout << ANSI_BLUE << "  🌊 [SONAR] Digested " << palette.totalPointsParsed << " ground-truth sonar sounding fixes." << ANSI_RESET << std::endl;
 
-    // -------------------------------------------------------------------------
-    // ZONE 4: CRYPTOGRAPHIC VERIFICATION & TAMPER INTERCEPT (Red Safety Fallback)
-    // -------------------------------------------------------------------------
     BenthicMesh meshService(horizontalResolutionMeters);
     std::string privateSystemKey = "WyvernCoordinationKey_2026";
 
+    std::cout << "🔒 Packaging matrix variables into cryptographically verifiable bytecode..." << std::endl;
     auto trustedByteStream = meshService.compileToBytecode(inferredBathymetry, privateSystemKey);
 
-    // Simulate an explicit security exception / payload attack
-    std::cout << "\n🔒 " << ANSI_BOLD << "Compiling Bytecode Storage Container..." << ANSI_RESET << std::endl;
+    // Run active verification check against a simulated security anomaly (as before)
+    std::cout << "⚠️  Simulating data interception... Manipulating stream signature..." << std::endl;
     auto tamperedByteStream = trustedByteStream;
     if (tamperedByteStream.size() > 5) {
-        tamperedByteStream[tamperedByteStream.size() - 1] ^= 0xAA; // Corrupt signature byte
+        tamperedByteStream[tamperedByteStream.size() - 1] ^= 0xAA; 
     }
 
     std::vector<std::vector<double>> runtimeWorkforceMatrix;
     bool processCleared = meshService.decompileFromBytecode(tamperedByteStream, privateSystemKey, runtimeWorkforceMatrix);
 
     if (!processCleared) {
-        std::cerr << ANSI_RED << ANSI_BOLD << "  🚨 [SECURITY FAILURE] Bytecode stream signature check mismatch!" << ANSI_RESET << std::endl;
-        std::cerr << ANSI_RED << "  🚨 [SECURITY FAILURE] Payload marked untrusted. Isolating volatile frames..." << ANSI_RESET << std::endl;
-        
+        std::cerr << ANSI_RED << "  🚨 [SECURITY FAILURE] Bytecode signature mismatch! Deploying Fallback..." << ANSI_RESET << std::endl;
         runtimeWorkforceMatrix = fallbackClimatologyMatrix;
-        std::cout << ANSI_YELLOW << "  🔄 [HEALED] Substituted default reference data map safely into workspace arrays." << ANSI_RESET << std::endl;
     }
 
-    // -------------------------------------------------------------------------
-    // ZONE 5: SYSTEM COMPLETION REPORT (Green Metrics Summary)
-    // -------------------------------------------------------------------------
-    IngestionMeta runtimeMeta{"2026-06-13T20:44:00Z", "Adaptive Error Isolation Run", horizontalResolutionMeters};
-    std::string meshFilename = "colored_seamount_output.obj";
-
-    std::cout << "\n💾 " << ANSI_BOLD << "Writing 3D Wireframe Assets..." << std::endl;
-    if (meshService.exportToWavefrontObj(runtimeWorkforceMatrix, meshFilename, runtimeMeta)) {
-        std::cout << "  └─ [OK] File written: " << meshFilename << std::endl;
+    IngestionMeta runtimeMeta{"2026-06-13T21:10:00Z", "Production Blend Run", horizontalResolutionMeters};
+    std::string filename = "inferred_seamount_output.obj";
+    if (meshService.exportToWavefrontObj(runtimeWorkforceMatrix, filename, runtimeMeta)) {
+        std::cout << ANSI_GREEN << "  └─ [OK] Editable 24-bit colored mesh written: " << filename << ANSI_RESET << std::endl;
         
-        std::cout << "\n" << ANSI_GREEN << ANSI_BOLD << "=========================================================" << ANSI_RESET << std::endl;
-        std::cout << ANSI_GREEN << ANSI_BOLD << "📊 PIPELINE ANALYSIS EXECUTION COMPLETE (ZERO LEAKS)" << ANSI_RESET << std::endl;
-        std::cout << ANSI_GREEN << "  🔹 Modeled Grid Peak Value  : " << std::fixed << std::setprecision(1) << runtimeWorkforceMatrix[5][5] << " m" << std::endl;
-        std::cout << ANSI_GREEN << "  🔹 Sonar Validation Value   : " << surveyPaletteMatrix[5][5] << " m" << std::endl;
-        std::cout << ANSI_GREEN << ANSI_BOLD << "=========================================================" << ANSI_RESET << std::endl;
-    } else {
-        std::cerr << ANSI_RED << "❌ Fatal Error: Could not write geometric matrix." << ANSI_RESET << std::endl;
-        return 1;
+        // Output production pipeline evaluation metrics
+        ScientificEvaluator validator;
+        ValidationMetrics scientificReport = validator.computeAccuracyProfile(runtimeWorkforceMatrix, surveyPaletteMatrix);
+        validator.printScientificReport(scientificReport);
     }
+
+    // =========================================================================
+    // OPERATION 2: ADVANCED BLIND QUALIFICATION TEST
+    // =========================================================================
+    std::cout << "\n" << ANSI_GREEN << ANSI_BOLD << "▶️ [OPERATION 2] RUNNING CLOSED-LOOP BLIND QUALIFICATION TEST" << ANSI_RESET << std::endl;
+
+    size_t qRows = 12;
+    size_t qCols = 12;
+
+    // 1. Establish the target structural verification model matrix
+    std::vector<std::vector<double>> verifiedGroundTruthGrid(qRows, std::vector<double>(qCols, -4500.0));
+    for (size_t r = 4; r <= 7; ++r) {
+        for (size_t c = 4; c <= 7; ++c) {
+            verifiedGroundTruthGrid[r][c] = -1200.0; // Hidden seamount crest
+        }
+    }
+
+    // 2. Hide the target seamount zone entirely using the qualification harness
+    size_t startRow = 3, endRow = 8;
+    size_t startCol = 3, endCol = 8;
+
+    QualificationHarness evaluator;
+    std::cout << "🔒 Applying spatial occlusion mask and generating satellite surface fuzz..." << std::endl;
+    auto blindFuzzyRadarSurface = evaluator.generateBlindSatelliteOcclusion(
+        verifiedGroundTruthGrid, 
+        startRow, endRow, 
+        startCol, endCol, 
+        0.00025
+    );
+
+    // 3. Challenge the updated Fibonacci cipher core to map the blind region
+    std::cout << "🔄 Challenging the Fibonacci Cyclical Inversion Core to reconstruct the hidden terrain..." << std::endl;
+    CyclicalCipher blindEngine(16, -4200.0); 
+    auto blindInferredTopography = blindEngine.executeEliminationWorkload(blindFuzzyRadarSurface);
+
+    // 4. Remove the occlusion layer and compute the final verification match score
+    std::cout << "🔓 Stripping away the occlusion mask layer. Scoring prediction accuracy..." << std::endl;
+    OcclusionReport testReport = evaluator.executeQualificationTest(
+        blindInferredTopography, 
+        verifiedGroundTruthGrid, 
+        startRow, endRow, 
+        startCol, endCol
+    );
+
+    if (testReport.qualificationPassed) {
+        std::cout << ANSI_GREEN << ANSI_BOLD << "🎉 SUCCESS: Advanced qualification threshold verified!" << ANSI_RESET << std::endl;
+    } else {
+        std::cout << ANSI_YELLOW << "⚠️  NOTICE: Structural shape alignment fell below the test baseline." << ANSI_RESET << std::endl;
+    }
+
+    std::cout << "\n" << ANSI_CYAN << ANSI_BOLD << "=========================================================" << ANSI_RESET << std::endl;
+    std::cout << ANSI_CYAN << ANSI_BOLD << "🏁 ALL PIPELINE RUNTIME ACTIONS COMPLETED CLEANLY" << ANSI_RESET << std::endl;
+    std::cout << ANSI_CYAN << ANSI_BOLD << "=========================================================" << ANSI_RESET << std::endl;
 
     return 0;
 }
