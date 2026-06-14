@@ -2,9 +2,9 @@
 
 An advanced, lightweight C++20 combinatorial optimization framework designed to reverse-engineer hidden seafloor bathymetry using multi-constellation satellite radar altimetry.
 
-* **🛡️**[![CodeQL Actions Status]](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/actions/workflows/codeql.yml)
-* **💻**[![Modern C++ Standard]](https://cppreference.com)
-* **🏷️**[![Release Version]](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/releases)
+* **🛡️** [CodeQL Actions Status](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/actions/workflows/codeql.yml)
+* **💻** [Modern C++ Standard](https://cppreference.com)
+* **🏷️** [Release Version](https://github.com/dmatchey-eng/benthic-spatial-prediction-engine/releases)
 
 ---
 
@@ -23,15 +23,11 @@ Direct shipborne multibeam sonar mapping is expensive, slow, and heavily biased 
 
 ---
 
-## 📜 Historical Insight & Core Axiom
-
+## 📜 Historical Insight
 The core theory of this software relies on a historical discovery made during late 20th-century space geodesy missions (Seasat, Geosat). Large geological structures resting on tectonic plates possess massive density profiles. An underwater seamount pulling on the surrounding ocean via local gravity creates a localized water accumulation—a permanent **sea surface bulge**. By tracking these micro-variations using satellite radar pulses, we use the surface itself as a natural lens.
 
-However, uniform sampling patterns over discrete pixel grids generate severe harmonic artifacts. 
+Uniform sampling patterns applied over discrete pixel grids generate severe harmonic artifacts. 
 
-> ### 🏛️ Core Design Axiom
-> **"Never let the lens step to the beat of the pixels."**
-> 
 > *If your directional step count shares factors with your grid dimensions (e.g., executing 12 steps on a 12x12 matrix), the calculation triggers **harmonic aliasing**. The algorithm stops searching for geological truth and instead synthesizes a "ghost" by sampling its own coordinate frequencies. To break this symmetry in the wild, the engine implements an asymmetric prime distribution (**23 steps**) to force data cancellation of repeating noise waves.*
 
 ---
