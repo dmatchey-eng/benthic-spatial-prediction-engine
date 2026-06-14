@@ -6,7 +6,14 @@
 #include <cmath>
 #include <algorithm>
 
+// =========================================================================
+// SECTION 1: CONSTRUCTOR
+// =========================================================================
 BenthicMesh::BenthicMesh(double resolution) : m_resolution(resolution) {}
+
+// =========================================================================
+// SECTION 2: METADATA HEADER GENERATION
+// =========================================================================
 std::string BenthicMesh::generateMetadataHeader(
     const std::vector<std::vector<double>>& topoMatrix, 
     const IngestionMeta& meta) 
@@ -39,6 +46,52 @@ std::string BenthicMesh::generateMetadataHeader(
        << "# =========================================================\n\n";
     return ss.str();
 }
+
+// =========================================================================
+// SECTION 3: EXHAUSTIVE 24-BIT ELEVATION COLOR ENCODING
+// =========================================================================
+RGBPaletteColor BenthicMesh::computeElevationColor(double depthMeters) {
+    RGBPaletteColor color{0.0f, 0.0f, 0.0f};
+    
+    // Clamp values to prevent spectrum wrapping anomalies
+    if (depthMeters < -6500.0) depthMeters = -6500.0;
+    if (depthMeters > 0.0) depthMeters = 0.0;
+
+    // Segment 1: Abyssal Trenches (-6500m to -5000m) -> Deep Purple to Dark Blue
+    if (depthMeters <= -5000.0) {
+        float factor = static_cast<float>((depthMeters - (-6500.0)) / 1500.0);
+        color.r = 0.3f * (1.0f - factor);
+        color.g = 0.0f;
+        color.b = 0.5f + (0.5f * factor);
+    }
+    // Segment 2: Abyssal Basin Plains (-5000m to -3000m) -> Deep Oceanic Blue
+    else if (depthMeters <= -3000.0) {
+        float factor = static_cast<float>((depthMeters - (-5000.0)) / 2000.0);
+        color.r = 0.0f;
+        color.g = 0.2f * factor;
+        color.b = 1.0f;
+    }
+    // Segment 3: Seamount Slopes (-3000m to -1000m) -> Transition Blue to Teal/Green
+    else if (depthMeters <= -1000.0) {
+        float factor = static_cast<float>((depthMeters - (-3000.0)) / 2000.0);
+        color.r = 0.0f;
+        color.g = 0.2f + (0.6f * factor);
+        color.b = 1.0f - (0.5f * factor);
+    }
+    // Segment 4: Shallow Crests / Reef Boundaries (-1000m to 0m) -> Green to Bright Yellow
+    else {
+        float factor = static_cast<float>((depthMeters - (-1000.0)) / 1000.0);
+        color.r = 1.0f * factor;
+        color.g = 0.8f + (0.2f * factor);
+        color.b = 0.5f * (1.0f - factor);
+    }
+
+    return color;
+}
+
+// =========================================================================
+// SECTION 4: WAVEFRONT OBJ MESH EXPORTER WITH EMBEDDED VERTEX COLORING
+// =========================================================================
 bool BenthicMesh::exportToWavefrontObj(
     const std::vector<std::vector<double>>& topoMatrix, 
     const std::string& filepath, 
@@ -55,18 +108,22 @@ bool BenthicMesh::exportToWavefrontObj(
     size_t rows = topoMatrix.size();
     size_t cols = topoMatrix[0].size();
 
-    // 1. Export Grid Vertices
+    // 1. Export Grid Vertices with Embedded 24-bit RGB Color Tokens
     for (size_t r = 0; r < rows; ++r) {
         for (size_t c = 0; c < cols; ++c) {
+            RGBPaletteColor vColor = computeElevationColor(topoMatrix[r][c]);
+            
+            // Standard OBJ extension: Appending R G B scalars right after X Y Z coordinates
             outFile << "v " << (c * m_resolution) << " " 
                     << (r * m_resolution) << " " 
-                    << topoMatrix[r][c] << "\n";
+                    << topoMatrix[r][c] << " "
+                    << vColor.r << " " << vColor.g << " " << vColor.b << "\n";
         }
     }
 
     outFile << "\n";
 
-    // 2. Export Face Connections
+    // 2. Export Face Connections (Quad Topology)
     for (size_t r = 0; r < rows - 1; ++r) {
         for (size_t c = 0; c < cols - 1; ++c) {
             size_t v1 = r * cols + c + 1;
@@ -80,11 +137,15 @@ bool BenthicMesh::exportToWavefrontObj(
 
     return true;
 }
+
+// =========================================================================
+// SECTION 5: CRYPTOGRAPHIC STREAM SIGNER
+// =========================================================================
 std::vector<uint8_t> BenthicMesh::computeStreamSignature(
     const std::vector<uint8_t>& data, 
     const std::string& key) 
 {
-    std::vector<uint8_t> signature(32, 0x4A); // 256-bit signature space
+    std::vector<uint8_t> signature(32, 0x4A); // 256-bit hash baseline signature container
     
     if (key.empty()) return signature;
 
@@ -94,6 +155,10 @@ std::vector<uint8_t> BenthicMesh::computeStreamSignature(
     }
     return signature;
 }
+
+// =========================================================================
+// SECTION 6: BYTECODE BINARY COMPILER
+// =========================================================================
 std::vector<uint8_t> BenthicMesh::compileToBytecode(
     const std::vector<std::vector<double>>& matrix, 
     const std::string& secretKey) 
@@ -105,24 +170,28 @@ std::vector<uint8_t> BenthicMesh::compileToBytecode(
     
     std::vector<uint8_t> rawBuffer;
     
-    // 1. Pack Dimensions
+    // 1. Pack Matrix Dimensions into structural header bounds
     rawBuffer.resize(sizeof(rows) + sizeof(cols));
     std::memcpy(rawBuffer.data(), &rows, sizeof(rows));
     std::memcpy(rawBuffer.data() + sizeof(rows), &cols, sizeof(cols));
     
-    // 2. Pack Floating Point Data
+    // 2. Linearize and pack 64-bit Floating-Point arrays directly into bytecode bytes
     for (const auto& row : matrix) {
         size_t currentOffset = rawBuffer.size();
         rawBuffer.resize(currentOffset + (row.size() * sizeof(double)));
         std::memcpy(rawBuffer.data() + currentOffset, row.data(), row.size() * sizeof(double));
     }
     
-    // 3. Compute and Append Cryptographic Signature
+    // 3. Compute and Append Cryptographic Verification Signature
     std::vector<uint8_t> streamAuthSignature = computeStreamSignature(rawBuffer, secretKey);
     rawBuffer.insert(rawBuffer.end(), streamAuthSignature.begin(), streamAuthSignature.end());
     
     return rawBuffer;
 }
+
+// =========================================================================
+// SECTION 7: BYTECODE DECOMPILER AND VALIDATOR
+// =========================================================================
 bool BenthicMesh::decompileFromBytecode(
     const std::vector<uint8_t>& bytecode, 
     const std::string& secretKey, 
@@ -136,13 +205,13 @@ bool BenthicMesh::decompileFromBytecode(
     std::vector<uint8_t> extractionBuffer(bytecode.begin(), bytecode.begin() + dataPayloadSize);
     std::vector<uint8_t> extractedSignature(bytecode.begin() + dataPayloadSize, bytecode.end());
     
-    // Validate Signature
+    // Run Cryptographic Validation check
     std::vector<uint8_t> calculatedSignature = computeStreamSignature(extractionBuffer, secretKey);
     if (calculatedSignature != extractedSignature) {
-        return false; // Stop immediately if payload signature verification fails
+        return false; // Interrupt pipeline processing immediately if signature verification fails
     }
     
-    // Extract Metadata Matrix Layout Bounds
+    // Extract Metadata Layout Dimensions
     uint64_t rows = 0;
     uint64_t cols = 0;
     std::memcpy(&rows, extractionBuffer.data(), sizeof(rows));
@@ -151,7 +220,7 @@ bool BenthicMesh::decompileFromBytecode(
     size_t expectedDataBytes = (sizeof(uint64_t) * 2) + (rows * cols * sizeof(double));
     if (dataPayloadSize != expectedDataBytes) return false;
     
-    // Safe Deserialization
+    // Safe continuous array reconstruction
     outMatrix.assign(rows, std::vector<double>(cols, 0.0));
     size_t byteOffset = sizeof(rows) + sizeof(cols);
     
