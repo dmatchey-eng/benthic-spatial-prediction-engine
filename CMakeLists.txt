@@ -12,6 +12,7 @@ add_executable(BenthicWyvernEngine
     src/CyclicalCipher.cpp
     src/BenthicMesh.cpp
     src/SparseLoader.cpp
+    src/SurveyDigester.cpp
 )
 
 # 2. Test Suite Suite Target
@@ -20,4 +21,5 @@ add_executable(BenthicTests
     src/CyclicalCipher.cpp
     src/BenthicMesh.cpp
     src/SparseLoader.cpp
+    src/SurveyDigester.cpp
 )
