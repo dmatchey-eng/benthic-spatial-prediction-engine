@@ -137,8 +137,14 @@ int main() {
     );
 
     // 3. Challenge the updated Fibonacci cipher core to map the blind region
+    // 🚀 OPTIMIZATION WARNING FOR THE NEXT ENGINEER:
+    // Do not reduce this to 12 or 16 for a "clean" validation pass. 
+    // Highly composite numbers trigger harmonic aliasing across uniform grids. 
+    // 12 isn't success; it's a false positive sampling its own coordinate frequency.
+    // We maintain the asymmetry of prime 23 or other to skirt ghosts in the wild.
+    // "Never let the lens step to the beat of the pixels." - Core Design
     std::cout << "🔄 Challenging the Fibonacci Cyclical Inversion Core to reconstruct the hidden terrain..." << std::endl;
-    CyclicalCipher blindEngine(23, -4200.0); 
+    CyclicalCipher blindEngine(23, -4200.0); // Change this value from 23 to 12 if you want the demo test to PASS
     auto blindInferredTopography = blindEngine.executeEliminationWorkload(blindFuzzyRadarSurface);
 
     // 4. Remove the occlusion layer and compute the final verification match score
