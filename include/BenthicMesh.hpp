@@ -11,6 +11,13 @@ struct IngestionMeta {
     double horizontalResolutionMeters;
 };
 
+// Represents a 24-bit RGB structural material property
+struct RGBPaletteColor {
+    float r;
+    float g;
+    float b;
+};
+
 class BenthicMesh {
 public:
     explicit BenthicMesh(double resolution = 500.0);
@@ -21,20 +28,20 @@ public:
         const IngestionMeta& meta
     );
 
-    // --- New Secure Bytecode Compiler / Decompiler Pair ---
-
-    // Compiles a 2D matrix into a signed, packed binary bytecode stream
     std::vector<uint8_t> compileToBytecode(
         const std::vector<std::vector<double>>& matrix, 
         const std::string& secretKey
     );
 
-    // Decompiles, validates, and reconstructs a matrix from a raw byte stream
     bool decompileFromBytecode(
         const std::vector<uint8_t>& bytecode, 
         const std::string& secretKey, 
         std::vector<std::vector<double>>& outMatrix
     );
+
+    // --- New Exhaustive Color-Coding Module ---
+    // Converts a precise depth variable into a standardized 24-bit RGB palette vector
+    RGBPaletteColor computeElevationColor(double depthMeters);
 
 private:
     double m_resolution;
@@ -43,7 +50,6 @@ private:
         const IngestionMeta& meta
     );
 
-    // Cryptographic validation helper (Internal simple HMAC fallback)
     std::vector<uint8_t> computeStreamSignature(
         const std::vector<uint8_t>& data, 
         const std::string& key
