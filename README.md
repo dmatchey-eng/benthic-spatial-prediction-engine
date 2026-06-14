@@ -43,21 +43,48 @@ The engine uses a dynamic priority allocation matrix to direct processing power 
 
 ## 🛠️ Repository Architecture
 
-This code is written completely in standard C++20 with an emphasis on low footprint, predictable memory structures, and strict safety vectors compliant with automated **GitHub CodeQL scanning**.
+This engine is developed completely in standardized, modern C++20 with an emphasis on zero raw pointer leaks, strict memory boundaries, and full compliance with automated GitHub CodeQL scanning.
 
 ```text
 ├── .github/workflows/
-│   └── codeql.yml       # GitHub Actions automated security screening loop
-├── CMakeLists.txt           # Build automation script mapping modern compilation rules
+│   └── codeql.yml       # Automated deep-security & code-quality scanning loop
+├── CMakeLists.txt           # Build automation configuration mapping modern CXX targets
 ├── include/
-│   ├── CyclicalCipher.hpp   # Header for rotational 360° gradient filters
-│   └── BenthicMesh.hpp      # Header for OBJ face compilation and JSON metadata
+│   ├── BenthicMesh.hpp      # Header for 24-bit vertex color compilation and OBJ packaging
+│   ├── CyclicalCipher.hpp   # Header for adaptive 360° gradient filters & volatility metrics
+│   ├── SparseLoader.hpp     # Header for telemetry tracking, outlier screening, and IOR healing
+│   └── SurveyDigester.hpp   # Header for hydrographic XYZ data ingestion and IDW palettes
 ├── src/
-│   ├── CyclicalCipher.cpp   # Mechanics for canceling directional hydrodynamic noise
+│   ├── BenthicMesh.cpp      # Mechanics for quad-decimated editable meshes and bytecode serialization
+│   ├── CyclicalCipher.cpp   # Mechanics for adaptive structural phase inversion and scaling
 │   ├── BenthicMesh.cpp      # Mechanics for building quad-decimated editable 3D meshes
-│   └── main.cpp             # Processing pipeline demonstration harness
+│   ├── SparseLoader.cpp     # Mechanics for Laplacian diffusion data healing across blank tracks
+│   ├── SurveyDigester.cpp   # Mechanics for continuous spatial palette distance weighting
+│   └── main.cpp             # Processing pipeline demonstration harness and error fallback intercept
 └── tests/
-    └── test.cpp             # Unit testing loops validating matrix invariants
+    └── test.cpp             # Unit testing loops validating matrix invariants & tampering guards
+```
+
+### 📡 Telemetry Ingestion Specifications
+
+To feed custom data matrix layers into the processing workspace, input string components must adhere to the following data layouts:
+
+#### 1. Satellite Radar Altimetry Stream (`SparseLoader`)
+Raw satellite payloads should be provided as space-delimited text blocks representing continuous spatial coordinates. Data dropouts or unmapped tracking lines can be marked explicitly with `NaN` or `-9999.0` placeholders:
+```text
+0.12  0.15   NaN   0.18  0.11
+0.14  0.45  0.45   0.42 -9999
+```
+
+#### 2. Hydrographic Sonar Track Records (`SurveyDigester`)
+Absolute ground-truth soundings should be supplied as newline-separated XYZ coordinate triplets. Lines starting with `#` are ignored as comments:
+```text
+# Longitude  Latitude  True_Depth_Meters
+-25.50       -45.00    -4200.0
+-25.48       -45.02    -3800.0
+-25.46       -45.04    -1500.0
+```
+
 ```
 
 ---
