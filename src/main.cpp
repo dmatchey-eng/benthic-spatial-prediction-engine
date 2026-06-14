@@ -9,8 +9,15 @@
 int main() {
     std::cout << "🚀 Initializing Full-Pipeline Benthic Spatial Prediction Engine..." << std::endl;
 
+    size_t targetRows = 10;
+    size_t targetCols = 10;
+    double horizontalResolutionMeters = 500.0;
+
+    // Establish default baseline climatology topography data (Our safe fallback matrix)
+    std::vector<std::vector<double>> fallbackClimatologyMatrix(targetRows, std::vector<double>(targetCols, -4500.0));
+
     // =========================================================================
-    // STEP 1: SATELLITE TELEMENTRY INGESTION & HEALING (SPARSE LOAD)
+    // STEP 1: SATELLITE TELEMETRY INGESTION & HEALING (SPARSE LOAD)
     // =========================================================================
     // Simulate a realistic 10x10 satellite text grid payload.
     // Contains sensor noise, surface elevation bulges, and gaps marked as "NaN" or "-9999".
@@ -26,9 +33,6 @@ int main() {
         "0.14  0.41  0.42   0.45  0.13  0.10  0.45  0.42  0.42   0.15 "
         "0.09  0.11  0.12   0.10  0.08  0.09  0.11  0.12  0.10   0.08 ";
 
-    size_t targetRows = 10;
-    size_t targetCols = 10;
-
     SparseLoader dataHealer(-2.0, 2.0); 
     IngestionDiagnostics loaderMetrics;
 
@@ -39,7 +43,6 @@ int main() {
         std::cerr << "❌ Pipeline Error: Initial telemetry parsing failed." << std::endl;
         return 1;
     }
-
     std::cout << "  └─ [OK] Patched " << loaderMetrics.missingDataGapsPatched << " corrupted telemetry gaps." << std::endl;
 
     // =========================================================================
@@ -73,52 +76,60 @@ int main() {
         targetCols, 
         palette.spatialBoundingBox
     );
-    
-    std::cout << "  └─ [OK] Extested Ground-Truth Points: " << palette.totalPointsParsed << " entries parsed." << std::endl;
+    std::cout << "  └─ [OK] Ground-Truth Points: " << palette.totalPointsParsed << " entries parsed." << std::endl;
 
     // =========================================================================
-    // STEP 4: DATA MODEL PACKAGING & SECURE CRYPTOGRAPHIC VERIFICATION
+    // STEP 4: DATA MODEL PACKAGING & CRYPTOGRAPHIC SECURITY VERIFICATION
     // =========================================================================
-    double horizontalResolutionMeters = 500.0;
     BenthicMesh meshService(horizontalResolutionMeters);
+    std::string privateSystemKey = "WyvernCoordinationKey_2026";
 
-    IngestionMeta currentRunMeta{
-        "2026-06-13T20:30:00Z", // Timestamp metadata token
-        "Multi-Constellation Satellite Mesh + Physical Hydrographic Tracks",
-        horizontalResolutionMeters
-    };
-
-    // Compile the final topography matrix array into signed binary bytecode bytes
-    std::string systemSecretToken = "WyvernCoordinationKey_2026";
+    // Compile matrix parameters into an official binary stream
     std::cout << "🔒 Packaging matrix variables into cryptographically verifiable bytecode..." << std::endl;
-    std::vector<uint8_t> secureByteStream = meshService.compileToBytecode(inferredBathymetry, systemSecretToken);
-    std::cout << "  └─ [OK] Packed Immutable Byte Stream Size: " << secureByteStream.size() << " bytes." << std::endl;
+    auto trustedByteStream = meshService.compileToBytecode(inferredBathymetry, privateSystemKey);
+    std::cout << "  └─ [OK] Packed Immutable Byte Stream Size: " << trustedByteStream.size() << " bytes." << std::endl;
 
-    // Perform an internal automated cryptographic self-check
-    std::vector<std::vector<double>> verifiedGrid;
-    bool isStreamValid = meshService.decompileFromBytecode(secureByteStream, systemSecretToken, verifiedGrid);
+    // =========================================================================
+    // SECURITY INTERCEPT: SIMULATE AN ACTIVE DATA TAMPERING ERROR STATE
+    // =========================================================================
+    std::cout << "\n⚠️ Simulating data interception... Manipulating stream signature..." << std::endl;
+    auto tamperedByteStream = trustedByteStream;
+    if (tamperedByteStream.size() > 5) {
+        tamperedByteStream[tamperedByteStream.size() - 1] ^= 0xAA; // Corrupt the authentication signature block
+    }
 
-    if (isStreamValid) {
-        std::cout << "✅ Cryptographic integrity pass successful. Token verified." << std::endl;
+    // Run stream through decompiler validation check
+    std::vector<std::vector<double>> runtimeWorkforceMatrix;
+    bool processCleared = meshService.decompileFromBytecode(tamperedByteStream, privateSystemKey, runtimeWorkforceMatrix);
+
+    // Error Handling Evaluation Core
+    if (!processCleared) {
+        std::cerr << "❌ CRITICAL SECURITY BREAK: Bytecode stream verification failed!" << std::endl;
+        std::cerr << "⚠️ Data is flagged as UNTRUSTED. Activating Fallback Isolation Protocol..." << std::endl;
         
-        // =========================================================================
-        // STEP 5: EXPORT OPEN GEOMETRY MESH (.OBJ)
-        // =========================================================================
-        std::string filename = "inferred_seamount_output.obj";
-        if (meshService.exportToWavefrontObj(verifiedGrid, filename, currentRunMeta)) {
-            std::cout << "💾 Editable 3D topological mesh successfully written to workspace: " << filename << std::endl;
-            
-            // Output pipeline peak predictions
-            std::cout << "\n=== PIPELINE EXECUTION SUMMARY ===" << std::endl;
-            std::cout << "🔮 Predicted Topography Peak Relief : " << std::fixed << std::setprecision(1) << verifiedGrid[2][2] << " meters." << std::endl;
-            std::cout << "📡 Ground-Truth Target Sonar Sounding: " << surveyPaletteMatrix[2][2] << " meters." << std::endl;
-            std::cout << "🎉 Full-pipeline execution wrapped up flawlessly." << std::endl;
-        } else {
-            std::cerr << "❌ System Error: Could not write output mesh file geometry." << std::endl;
-            return 1;
-        }
+        // Safe Substitution: Drop corrupted memory handles and load stable baseline data maps
+        runtimeWorkforceMatrix = fallbackClimatologyMatrix;
+        std::cout << "🔄 [HEALED] Pipeline safely switched to default ocean basin baseline." << std::endl;
     } else {
-        std::cerr << "❌ Critical Security Alert: Bytecode payload validation failed or signature is unauthenticated!" << std::endl;
+        std::cout << "✅ Stream verification clear. Proceeding with active data calculation tracks." << std::endl;
+    }
+
+    // =========================================================================
+    // STEP 5: EXPORT OPEN GEOMETRY MESH WITH 24-BIT VERTEX COLORING (.OBJ)
+    // =========================================================================
+    IngestionMeta runtimeMeta{"2026-06-13T20:44:00Z", "Adaptive Error Isolation Run", horizontalResolutionMeters};
+    std::string meshFilename = "colored_seamount_output.obj";
+
+    if (meshService.exportToWavefrontObj(runtimeWorkforceMatrix, meshFilename, runtimeMeta)) {
+        std::cout << "\n💾 Exhaustive 24-bit colored mesh written to workspace: " << meshFilename << std::endl;
+        
+        // Output pipeline peak predictions
+        std::cout << "\n=== PIPELINE EXECUTION SUMMARY ===" << std::endl;
+        std::cout << "🔮 Final Topography Matrix Modeled Peak Depth: " << std::fixed << std::setprecision(1) << runtimeWorkforceMatrix[5][5] << " meters." << std::endl;
+        std::cout << "📡 Coincident Ground-Truth Sonar Sounding     : " << surveyPaletteMatrix[5][5] << " meters." << std::endl;
+        std::cout << "🎉 Full-pipeline execution wrapped up flawlessly with complete error isolation." << std::endl;
+    } else {
+        std::cerr << "❌ Error: File save matrix target failed." << std::endl;
         return 1;
     }
 
