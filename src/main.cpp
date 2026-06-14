@@ -138,7 +138,7 @@ int main() {
 
     // 3. Challenge the updated Fibonacci cipher core to map the blind region
     std::cout << "🔄 Challenging the Fibonacci Cyclical Inversion Core to reconstruct the hidden terrain..." << std::endl;
-    CyclicalCipher blindEngine(16, -4200.0); 
+    CyclicalCipher blindEngine(23, -4200.0); 
     auto blindInferredTopography = blindEngine.executeEliminationWorkload(blindFuzzyRadarSurface);
 
     // 4. Remove the occlusion layer and compute the final verification match score
